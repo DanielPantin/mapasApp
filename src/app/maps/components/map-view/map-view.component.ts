@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { Map, MapStyle, config, Popup, Marker } from '@maptiler/sdk';
+import { Map, MapStyle, config, Popup, Marker, helpers, data } from '@maptiler/sdk';
 
 import '@maptiler/sdk/dist/maptiler-sdk.css';
 import { PlacesService } from '../../services/places.service';
 import { MapService } from '../../services';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-map-view',
@@ -16,7 +17,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private placesService: PlacesService,
     private mapService: MapService,
-    ) { }
+  ) { }
 
   @ViewChild('map')
   private mapContainer!: ElementRef<HTMLElement>;
@@ -38,20 +39,22 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     });
 
+
     const popup = new Popup()
-    .setHTML(`
+      .setHTML(`
       <h6>Aquí estoy</h6>
       <span>Estoy en este lugar del mundo</span>
     `);
 
-    new Marker({color: 'red'})
-    .setLngLat(this.placesService.userLocation!)
-    .setPopup(popup)
-    .addTo(this.map)
+    new Marker({ color: 'red' })
+      .setLngLat(this.placesService.userLocation!)
+      .setPopup(popup)
+      .addTo(this.map)
 
     this.mapService.setMap(this.map);
 
   }
+
 
   ngOnDestroy() {
     this.map?.remove();
